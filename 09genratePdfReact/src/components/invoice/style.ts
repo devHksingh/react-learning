@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
     fontFamily: "Helvetica",
     fontSize: "12px",
     padding: "30px 50px",
+    height:100
   },
   header: {
     flexDirection: "row",
@@ -35,7 +36,24 @@ export const styles = StyleSheet.create({
   },
   tableHeader: {
     backgroundColor: "#2d8baf",
-    color:'#212121'
+    color:'#212121',
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'space-between',
+  },
+  tableRow:{
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'flex-start',
+    textAlign:'center',
+    border:'1px'
+  },
+  description:{
+    
+    padding:4,
+    maxWidth:84,
+    textAlign:'center'
   },
   td: {
     padding: 6,
