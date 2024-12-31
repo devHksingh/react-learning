@@ -57,6 +57,7 @@ export const styles = StyleSheet.create({
   },
   td: {
     padding: 6,
+    flex: 1
   },
   totals: {
     display: "flex",
