@@ -16,14 +16,6 @@ interface TodoState {
     status: "idle" | "error" | "loading"
 }
 
-// interface Action {
-//     type: "update" | "remove";
-//     payload: {
-//         completed?: boolean,
-//         id?: number
-//     }
-// }
-
 const initialState:TodoState={
     data:[],
     status:STATUS.IDLE
@@ -44,24 +36,33 @@ export const todoSlice = createSlice({
     initialState,
     reducers: {
         updateTodo: (state, action) => {
-            const { type, payload } = action;
-            switch (type) {
-                case "update": {
-                    state.data = state.data.map((item) =>
-                        item.id === payload.id
-                            ? { ...item, completed: payload.completed }
-                            : item
-                    );
-                    break;
-                }
-                case "remove": {
-                    state.data = state.data.filter((item) => item.id !== payload.id);
-                    break;
-                }
-                default:
-                    return state;
-            }
+            const {  payload } = action;
+            console.log(payload);
+            const {id,completed} = payload
+            
+            state.data = state.data.map((todo)=>
+            todo.id === id? {...todo,completed}:todo)
+            // switch (type) {
+            //     case "update": {
+            //          state.data = state.data.map((item) =>
+            //             item.id === id
+            //                 ? { ...item, completed }
+            //                 : item
+            //         );
+            //         break;
+            //     }
+            //     case "remove": {
+            //         state.data = state.data.filter((item) => item.id !== payload.id);
+            //         break;
+            //     }
+            //     default:
+            //         return state;
+            // }
         },
+        removeTodo:(state,action) =>{
+            const {id} =action.payload
+            state.data= state.data.filter((todo)=>todo.id !== id)
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -84,5 +85,5 @@ export const todoSlice = createSlice({
 //     return data
 // })
 
-export const { updateTodo } = todoSlice.actions
+export const { updateTodo,removeTodo } = todoSlice.actions
 export default todoSlice.reducer
