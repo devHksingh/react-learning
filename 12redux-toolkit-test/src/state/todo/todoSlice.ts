@@ -30,8 +30,12 @@ const initialState:TodoState={
 }
 
 export const fetchTodos = createAsyncThunk("todos/fetch", async () => {
+    console.log("fetch todos");
+    
     const res = await fetch("https://jsonplaceholder.typicode.com/todos");
     const data = await res.json();
+    console.log("fetch todos",data);
+    
     return data;
 });
 
