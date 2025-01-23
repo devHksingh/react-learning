@@ -58,3 +58,12 @@ prefetchPosts();
 ```
 
 In this example, prefetchPosts is a function that initializes a QueryClient and uses prefetchQuery to load posts data into the cache. The Posts component then uses useQuery with the same queryKey to access the cached data, which will be available immediately if it has been prefetched
+
+# Mutation Side Effects
+
+useMutation comes with some helper options that allow quick and easy side-effects at any stage during the mutation lifecycle. These come in handy for both invalidating and refetching queries after mutations and even optimistic updates
+
+<https://tanstack.com/query/latest/docs/framework/react/guides/mutations>(link)
+
+
+## Optimistic Updates
