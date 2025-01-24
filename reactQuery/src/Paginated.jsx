@@ -1,6 +1,7 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
+import debounce from 'lodash.debounce'
 
 const Paginated = () => {
   const [searchParams, setSearchParams] = useSearchParams({
@@ -9,6 +10,7 @@ const Paginated = () => {
   });
   const skip = parseInt(searchParams.get("skip") || 0);
   const limit = parseInt(searchParams.get("limit") || 4);
+  const q = searchParams.get("q") || "";
   async function fetchBycategories() {
     const res = await axios.get("https://dummyjson.com/products/categories");
     console.log(res.data);
@@ -16,23 +18,38 @@ const Paginated = () => {
   }
   async function getAllProducts() {
     const res = await axios.get(
-      `https://dummyjson.com/products?limit=${limit}&skip=${skip}`
+      `https://dummyjson.com/products/search?limit=${limit}&skip=${skip}&q=${q}`
     );
     console.log(res.data);
     return res.data.products;
   }
+//   async function getSearchProducts() {
+//     const res = await axios.get(
+//       `https://dummyjson.com/products/search?q=${q}&limit=${limit}&skip=${skip}`
+//     );
+//     console.log(res.data);
+//     return res.data.products;
+//   }
 
   const {
     data: products,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["getAllProducts", limit, skip],
+    queryKey: ["getAllProducts", limit, skip, q],
     queryFn: getAllProducts,
     //Placeholder data allows a query to behave as if it already has data,
     //similar to the initialData option, but the data is not persisted to the cache
     placeholderData: keepPreviousData,
   });
+  //   search product
+  //   const {
+  //     data:searchProducts
+  //   }= useQuery({
+  //     queryKey:["searchPara",limit,q,skip],
+  //     queryFn:getSearchProducts,
+  //     placeholderData:keepPreviousData
+  //   })
   const {
     data: categories,
     isLoading: isCategoryDataLoading,
@@ -66,9 +83,9 @@ const Paginated = () => {
     // setSkip((prevSkip) => {
     //   return Math.max(prevSkip + moveCount, 0);
     // });
-    setSearchParams((prev)=>{
-        prev.set('skip',Math.max(skip + moveCount, 0))
-    })
+    setSearchParams((prev) => {
+      prev.set("skip", Math.max(skip + moveCount, 0));
+    });
   };
   return (
     <>
@@ -82,7 +99,13 @@ const Paginated = () => {
           <div>
             <div className="relative flex items-center gap-8 mt-2 mb-4 rounded-md">
               <input
-                onChange={() => {}}
+                onChange={debounce((e) => {
+                    setSearchParams((prev) => {
+                      prev.set("q", e.target.value);
+                      prev.set("skip", 0);
+                      return prev;
+                    });
+                  },1000)}
                 type="text"
                 name="price"
                 id="price"
