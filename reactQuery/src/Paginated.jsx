@@ -1,10 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const Paginated = () => {
-  const [limit, setLimit] = useState(4);
-  const [skip, setSkip] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams({
+    skip: 0,
+    limit: 4,
+  });
+  const skip = parseInt(searchParams.get("skip") || 0);
+  const limit = parseInt(searchParams.get("limit") || 4);
   async function fetchBycategories() {
     const res = await axios.get("https://dummyjson.com/products/categories");
     console.log(res.data);
@@ -25,6 +29,9 @@ const Paginated = () => {
   } = useQuery({
     queryKey: ["getAllProducts", limit, skip],
     queryFn: getAllProducts,
+    //Placeholder data allows a query to behave as if it already has data,
+    //similar to the initialData option, but the data is not persisted to the cache
+    placeholderData: keepPreviousData,
   });
   const {
     data: categories,
@@ -56,9 +63,12 @@ const Paginated = () => {
         skip =0 moveCount =-4
         0+-4=-4
     */
-    setSkip((prevSkip) => {
-      return Math.max(prevSkip + moveCount, 0);
-    });
+    // setSkip((prevSkip) => {
+    //   return Math.max(prevSkip + moveCount, 0);
+    // });
+    setSearchParams((prev)=>{
+        prev.set('skip',Math.max(skip + moveCount, 0))
+    })
   };
   return (
     <>
