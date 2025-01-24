@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Products from "./Products.jsx";
 import Product from "./Product.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import Parallel from './parallel.jsx';
+import Parallel from './Parallel.jsx';
 // import Optimistic from './optimistic.jsx';
 // import Dependant from './dependant.jsx';
 import Paginated from './Paginated.jsx';
@@ -35,10 +35,10 @@ const router = createBrowserRouter([
     path: 'paginated',
     element: <Paginated />,
 },
-// {
-//     path: 'parallel',
-//     element: <Parallel />,
-// },
+{
+    path: 'parallel',
+    element: <Parallel />,
+},
 // {
 //     path: 'optimistic',
 //     element: <Optimistic />,
