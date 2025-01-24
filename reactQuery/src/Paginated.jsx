@@ -11,17 +11,23 @@ const Paginated = () => {
   const skip = parseInt(searchParams.get("skip") || 0);
   const limit = parseInt(searchParams.get("limit") || 4);
   const q = searchParams.get("q") || "";
+  const category= searchParams.get('category') ||""
   async function fetchBycategories() {
     const res = await axios.get("https://dummyjson.com/products/categories");
     console.log(res.data);
     return res.data;
   }
   async function getAllProducts() {
-    const res = await axios.get(
-      `https://dummyjson.com/products/search?limit=${limit}&skip=${skip}&q=${q}`
-    );
-    console.log(res.data);
-    return res.data.products;
+    if(category){
+        const res = await axios.get(`https://dummyjson.com/products/category/${category}?limit=${limit}&skip=${skip}`)
+        return res.data.products
+    }else{
+        const res = await axios.get(
+            `https://dummyjson.com/products/search?limit=${limit}&skip=${skip}&q=${q}`
+          );
+          console.log(res.data);
+          return res.data.products;
+    }
   }
 //   async function getSearchProducts() {
 //     const res = await axios.get(
@@ -36,7 +42,7 @@ const Paginated = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["getAllProducts", limit, skip, q],
+    queryKey: ["getAllProducts", category, limit, skip, q],
     queryFn: getAllProducts,
     //Placeholder data allows a query to behave as if it already has data,
     //similar to the initialData option, but the data is not persisted to the cache
@@ -70,6 +76,13 @@ const Paginated = () => {
   if (isLoading) {
     return <>Loading products ...</>;
   }
+  const handleCategoryChange = (e) => {
+    setSearchParams((prev) => {
+      prev.set("category", e.target.value);
+      prev.set("skip", "0"); // Reset pagination
+      return prev;
+    });
+  };
   const handleMove = (moveCount) => {
     /*
         next btn
@@ -112,7 +125,7 @@ const Paginated = () => {
                 className="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="IPhone"
               />
-              <select className="p-2 text-black border" onChange={() => {}}>
+              <select className="p-2 text-black border" onChange={handleCategoryChange}>
                 <option>Select category</option>
                 {categories?.map((category, i) => (
                   <option key={i} value={category.name}>
