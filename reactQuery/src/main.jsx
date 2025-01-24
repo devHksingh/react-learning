@@ -6,7 +6,10 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Products from "./Products.jsx";
 import Product from "./Product.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
+// import Parallel from './parallel.jsx';
+// import Optimistic from './optimistic.jsx';
+// import Dependant from './dependant.jsx';
+import Paginated from './Paginated.jsx';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -28,6 +31,22 @@ const router = createBrowserRouter([
     path: "/products/:productId",
     element: <Product />,
   },
+  {
+    path: 'paginated',
+    element: <Paginated />,
+},
+// {
+//     path: 'parallel',
+//     element: <Parallel />,
+// },
+// {
+//     path: 'optimistic',
+//     element: <Optimistic />,
+// },
+// {
+//     path: 'dependant',
+//     element: <Dependant />,
+// },
 ]);
 createRoot(document.getElementById("root")).render(
   <StrictMode>
