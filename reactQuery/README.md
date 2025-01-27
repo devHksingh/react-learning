@@ -67,3 +67,6 @@ useMutation comes with some helper options that allow quick and easy side-effect
 
 
 ## Optimistic Updates
+
+
+In the context of react-query, the placeholderData option is used to provide a temporary data value that will be displayed while the actual query is still fetching data. This makes the application more resilient and avoids rendering errors when the query data is not yet available.
