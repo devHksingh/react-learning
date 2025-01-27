@@ -8,7 +8,7 @@ const api = axios.create({
 
 export const getUserData= async()=>{
     const res= await api.get('')
-    console.log(res);
+    
     return  res.data
     
 } 
