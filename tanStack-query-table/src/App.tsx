@@ -1,5 +1,6 @@
 
 import './App.css'
+
 import UserTable from './components/UserTable'
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
 
   return (
     <>
+    
       <UserTable/>
     </>
   )

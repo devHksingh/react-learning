@@ -1,7 +1,7 @@
 import {  useQuery } from "@tanstack/react-query"
 import { getUserData } from "../http/api/api"
-import { createColumnHelper, flexRender, useReactTable ,getCoreRowModel} from "@tanstack/react-table"
-import { IdCardIcon, Image, MailIcon, Navigation, User, UserPenIcon } from "lucide-react"
+import { createColumnHelper, flexRender, useReactTable ,getCoreRowModel, SortingState,getSortedRowModel} from "@tanstack/react-table"
+import { ArrowBigDownIcon, ArrowDownUp, ArrowUp01Icon, IdCardIcon, Image, MailIcon, Navigation, User, UserPenIcon } from "lucide-react"
 import { useEffect, useState } from "react";
 
 type Person = {
@@ -20,11 +20,12 @@ const UserTable = () => {
     // react table
     
     const [userArr, setUserArr] = useState<Person[]>([]);
+    const [sorting,setSorting] = useState<SortingState>([])
 
     const {data,error,isLoading} = useQuery({
         queryKey:['users'],
         queryFn:getUserData,
-        placeholderData:{ users: [] } ,
+        // placeholderData:{ users: [] } ,
         refetchInterval: 20*60*1000, // Refetch every 20min
         refetchIntervalInBackground: true, // Continue refetching in the background,
     })
@@ -56,8 +57,10 @@ const UserTable = () => {
             header:()=>(
                 <span className="flex items-center">
                     <IdCardIcon className="mr-2" size={16}/>Id
+                    <ArrowDownUp className="ml-2" size={16}/>
                 </span>
-            )
+            ),
+            enableSorting:true,
         }),
         columnHleper.accessor("image",{
             cell:(info)=> <img src={info.getValue()} alt="User" className="w-8 h-8 rounded-full" />,
@@ -65,7 +68,8 @@ const UserTable = () => {
                 <span className="flex items-center">
                     <Image className="mr-2" size={16}/>Image
                 </span>
-            )
+            ),
+            
         }),
         columnHleper.accessor("name",{
             cell:(info)=>info.getValue(),
@@ -73,21 +77,29 @@ const UserTable = () => {
                 <span className="flex items-center">
                     <User className="mr-2" size={16}/>Name
                 </span>
-            )
+            ),
+            enableSorting:true,
         }),
         columnHleper.accessor("age",{
             cell:(info)=>info.getValue(),
             header:()=>(
                 <span className="flex items-center">
-                    <User className="mr-2" size={16}/>Age
+                    <User className="mr-2" size={16}/>
+                    Age
+                    <ArrowDownUp className="ml-2" size={16}/>
                 </span>
-            )
+            ),
+            enableSorting:true,
         }),
         columnHleper.accessor("email",{
-            cell:(info)=>info.getValue(),
+            id:"email",
+            cell:(info)=>(
+                <span className="italic text-blue-600">{info.getValue()}</span>
+            ),
             header:()=>(
                 <span className="flex items-center">
                     <MailIcon className="mr-2" size={16}/>Email
+                    <ArrowDownUp className="ml-2" size={16}/>
                 </span>
             )
         }),
@@ -96,38 +108,51 @@ const UserTable = () => {
             header:()=>(
                 <span className="flex items-center">
                    <User className="mr-2" size={16}/> Role
+                   <ArrowDownUp className="ml-2" size={16}/>
                 </span>
-            )
+            ),
+            enableSorting:true,
         }),
         columnHleper.accessor("profile",{
             cell:(info)=>info.getValue(),
             header:()=>(
                 <span className="flex items-center">
                     <UserPenIcon className="mr-2" size={16}/> Profile
+                    <ArrowDownUp className="ml-2" size={16}/>
                 </span>
-            )
+            ),
+            enableSorting:true,
         }),
         columnHleper.accessor("country",{
             cell:(info)=>info.getValue(),
             header:()=>(
                 <span className="flex items-center capitallize">
                     <Navigation className="mr-2" size={16}/>country
+                    <ArrowDownUp className="ml-2" size={16}/>
                 </span>
-            )
+            ),
+            enableSorting:true,
         }),
         columnHleper.accessor("state",{
             cell:(info)=>info.getValue(),
             header:()=>(
                 <span className="flex items-center">
                     <Navigation className="mr-2" size={16}/>state
+                    <ArrowDownUp className="ml-2" size={16}/>
                 </span>
-            )
+            ),
+            enableSorting:true,
         }),
     ]
     const table = useReactTable({
         data:userArr,
         columns,
+        state:{
+            sorting
+        },
+        onSortingChange: setSorting, // Update sorting state
         getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(), // Add sorting model
     })
 
     if(isLoading){
@@ -136,6 +161,7 @@ const UserTable = () => {
     if(error){
         return (<h1 className="text-2xl text-orange-600 font-bold">Error....</h1>)
     }
+    console.log(table.getRowModel());
     
   return (
     <div className="flex flex-col min-h-screen max-w-8xl mx-auto py-12 px-4 sm:px-6 lg:px-8 ">
@@ -144,8 +170,15 @@ const UserTable = () => {
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {flexRender(header.column.columnDef.header, header.getContext())}
+                <th key={header.id} 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                onClick={header.column.getToggleSortingHandler()}
+                >
+                  <div className={`${header.column.getCanSort()?`flex items-center cursor-pointer select-none`:''}`}>
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                    {header.column.getIsSorted() === "asc" && <span> <ArrowUp01Icon className="ml-2" size={14}/></span>} 
+                    {header.column.getIsSorted() === "desc" && <span><ArrowBigDownIcon className="ml-2" size={16}/> </span>}
+                  </div>
                 </th>
               ))}
             </tr>
@@ -182,4 +215,5 @@ export default UserTable
           </p>
         </div>
       ))}
+        //🔼 🔽
 */
