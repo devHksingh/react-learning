@@ -1,6 +1,6 @@
 import {  useQuery } from "@tanstack/react-query"
 import { getUserData } from "../http/api/api"
-import { createColumnHelper, flexRender, useReactTable ,getCoreRowModel, SortingState,getSortedRowModel} from "@tanstack/react-table"
+import { createColumnHelper, flexRender, useReactTable ,getCoreRowModel, SortingState,getSortedRowModel, getFilteredRowModel} from "@tanstack/react-table"
 import { ArrowBigDownIcon, ArrowDownUp, ArrowUp01Icon, IdCardIcon, Image, MailIcon, Navigation, User, UserPenIcon } from "lucide-react"
 import { useEffect, useState } from "react";
 
@@ -21,6 +21,7 @@ const UserTable = () => {
     
     const [userArr, setUserArr] = useState<Person[]>([]);
     const [sorting,setSorting] = useState<SortingState>([])
+    const [globalFilter,setGlobalFilter]=useState("") // For searching
 
     const {data,error,isLoading} = useQuery({
         queryKey:['users'],
@@ -148,11 +149,13 @@ const UserTable = () => {
         data:userArr,
         columns,
         state:{
-            sorting
+            sorting,
+            globalFilter
         },
         onSortingChange: setSorting, // Update sorting state
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(), // Add sorting model
+        getFilteredRowModel:getFilteredRowModel()
     })
 
     if(isLoading){
@@ -165,6 +168,14 @@ const UserTable = () => {
     
   return (
     <div className="flex flex-col min-h-screen max-w-8xl mx-auto py-12 px-4 sm:px-6 lg:px-8 ">
+      {/* Search */}
+      <input
+        type="text"
+        placeholder="Search..."
+        value={globalFilter}
+        onChange={(e) => setGlobalFilter(e.target.value)}
+        className="mb-4 p-2 border rounded"
+      />
         <table className="min-w-full divide-y divide-gray-200 border ">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
