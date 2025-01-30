@@ -4,11 +4,11 @@ import Footer from "../components/Footer"
 
 const HomeLayout = () => {
   return (
-    <>
+    <div className="relative ">
         <NavBar/>
         <Outlet/>
         <Footer/>
-    </>
+    </div>
   )
 }
 
