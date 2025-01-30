@@ -27,7 +27,7 @@ const NavBar = () => {
     setTheme(isOn ? "light" : "dark");
   }, [isOn]);
   return (
-    <nav className="sticky bottom-0 flex items-center justify-around w-full p-4 bg-stone-600 bg-surface-tonal-a10" >
+    <nav className="sticky bottom-0 flex items-center justify-around w-full p-4 bg-stone-600 bg-surface-tonal-a0" >
       <ul className="flex justify-center w-3/4 gap-12">
         <li><NavLink to="/home" className={({isActive})=>`text-primary-a10 font-medium text-lg hover:text-primary-a50 ${isActive?` border-b-2 border-orange-400 pb-0.5 `:``}`}>Home</NavLink></li>
         <li><NavLink to="/form" className={({isActive})=>`text-primary-a40 font-medium text-lg hover:text-primary-a50 ${isActive?`border-b-2 border-orange-400 pb-0.5`:``}`}>Form</NavLink></li>
@@ -62,4 +62,4 @@ export default NavBar
 
 /*
 
-*/
+*/ 
