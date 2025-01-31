@@ -3,11 +3,11 @@ import Home from "./components/Home";
 import HomeLayout from "./Layout/HomeLayout";
 import FormPage from "./components/FormPage";
 import ShowPage from "./components/ShowPage";
-import LoginPage from "./components/LoginPage";
+// import LoginPage from "./components/LoginPage";
 
 const router = createBrowserRouter([
     {
-        path:"home",
+        path:"",
         element:<HomeLayout/>,
         children:[
             {
@@ -16,7 +16,7 @@ const router = createBrowserRouter([
             },
             { path: "form", element: <FormPage /> },
             { path: "show", element: <ShowPage /> },
-            { path: "login", element: <LoginPage /> },
+            // { path: "login", element: <LoginPage /> },
         ]
     }
 ])
