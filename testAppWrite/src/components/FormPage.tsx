@@ -1,7 +1,7 @@
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 // import { db } from "../appwrite/database";
 import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
@@ -23,11 +23,11 @@ interface FormData {
 const FormPage = () => {
   const [isError,setIsError]=useState(false)
   const [isLoading,setIsLoading]=useState(false)
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const {
     register,
     handleSubmit,
-    // reset,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -42,9 +42,13 @@ const FormPage = () => {
         ID.unique(),
         data
       )
-      navigate('/show') 
-    } catch (error) {
+      reset()
+      // navigate('/show') 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error:any) {
       setIsError(true)
+      console.log(error);
+      
     }finally{
       setIsLoading(false)
     }
@@ -109,7 +113,7 @@ const FormPage = () => {
         </label>
         
 
-        <button className="block w-full p-1 px-2 mx-auto mt-2 bg-blue-500 rounded hover:bg-blue-600"
+        <button className="flex justify-center w-full gap-2 p-1 px-2 mx-auto mt-2 bg-blue-500 rounded hover:bg-blue-600"
         disabled={isLoading}
         >
         {isLoading && (<LoaderCircle className="animate-spin" />)}

@@ -36,9 +36,10 @@ const ShowPage = () => {
       age:doc.age
     }))
     setUserData(formatedResponse)
-    } catch (err) {
+    } catch (err:unknown) {
       setIsError(true)
       setErrorMsg("Error occured while fetching data.")
+      console.log(err)
     }finally{
       setIsLoading(false)
     }
@@ -56,9 +57,10 @@ const ShowPage = () => {
      
      setUserData([])
      init()
-     } catch (error) {
+     } catch (error:unknown) {
       setIsError(true)
       setErrorMsg("Unable to delete userData .try it again!")
+      console.log(error)
      }
   }
   const handleUpdate =(id:string)=>{
