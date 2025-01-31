@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { databases } from "../appwrite/config"
+import { useNavigate } from "react-router-dom"
 // import { db } from "../appwrite/database"
 // import useFormDataQuery from "../hooks/useFormDataQuery"
 
@@ -16,6 +17,7 @@ const ShowPage = () => {
   const [isLoading,setIsLoading] = useState(false)
   const [isError,setIsError] = useState(false)
   const [errorMsg,setErrorMsg] = useState("")
+  const navigate = useNavigate()
   const init = async ()=>{
     
       
@@ -59,6 +61,9 @@ const ShowPage = () => {
       setErrorMsg("Unable to delete userData .try it again!")
      }
   }
+  const handleUpdate =(id:string)=>{
+    navigate(`/update/${id}`)
+  }
   return (
     <div className="w-full min-h-screen p-2">
       <h1 className="text-2xl font-semibold text-center">ShowPage</h1>
@@ -96,7 +101,9 @@ const ShowPage = () => {
             <p>Email: {item.email}</p>
             <p>Age: {item.age}</p>
             <div className="flex gap-4 mt-2">
-              <button className="px-2 py-0.5 bg-sky-600 rounded-md hover:bg-sky-800">Update</button>
+              <button className="px-2 py-0.5 bg-sky-600 rounded-md hover:bg-sky-800"
+              onClick={()=>handleUpdate(item.$id)}
+              >Update</button>
               <button className="px-2 py-0.5 bg-red-600 rounded-md hover:bg-red-800"
               onClick={()=>handleDeleteBtn(item.$id)}
               >Delete</button>
