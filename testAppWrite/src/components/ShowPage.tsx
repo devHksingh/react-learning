@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-// import { databases } from "../appwrite/config"
-import { db } from "../appwrite/database"
+import { databases } from "../appwrite/config"
+// import { db } from "../appwrite/database"
 // import useFormDataQuery from "../hooks/useFormDataQuery"
 
 
@@ -15,17 +15,18 @@ const ShowPage = () => {
   const [userData,setUserData]=useState<Person[]>([])
   const [isLoading,setIsLoading] = useState(false)
   const [isError,setIsError] = useState(false)
+  const [errorMsg,setErrorMsg] = useState("")
   const init = async ()=>{
     
-    // const response = await databases.listDocuments(
-    //   // require dbid collectionid
-    //   // db.user.list || db.user.create()
-    //   import.meta.env.VITE_PUBLIC_DATABASE_ID,
-    //   import.meta.env.VITE_PUBLIC_COLLECTION_ID_USER 
-    // )  
+      
     try {
       setIsLoading(true)
-      const response = await db.formData.list()  
+      const response = await databases.listDocuments(
+        // require dbid collectionid
+        // 
+        import.meta.env.VITE_PUBLIC_DATABASE_ID,
+        import.meta.env.VITE_PUBLIC_COLLECTION_ID_USER 
+      )
       const formatedResponse = response.documents.map((doc)=>({
       $id:doc.$id,
       name:doc.name,
@@ -35,19 +36,36 @@ const ShowPage = () => {
     setUserData(formatedResponse)
     } catch (err) {
       setIsError(true)
+      setErrorMsg("Error occured while fetching data.")
     }finally{
       setIsLoading(false)
     }
   }
   
   useEffect(()=>{init()},[])
+
+  const handleDeleteBtn=async(id:string)=>{
+     try {
+      await databases.deleteDocument(
+       import.meta.env.VITE_PUBLIC_DATABASE_ID,
+       import.meta.env.VITE_PUBLIC_COLLECTION_ID_USER,
+       id
+     )
+     
+     setUserData([])
+     init()
+     } catch (error) {
+      setIsError(true)
+      setErrorMsg("Unable to delete userData .try it again!")
+     }
+  }
   return (
     <div className="w-full min-h-screen p-2">
       <h1 className="text-2xl font-semibold text-center">ShowPage</h1>
       {
         isError && (
           <div className="w-full">
-            <p className="text-center ">Error occured while fetching data</p>
+            <p className="text-center ">{errorMsg}</p>
           </div>
         )
       }
@@ -66,18 +84,7 @@ const ShowPage = () => {
               <div className="w-full h-[8rem] p-2 rounded-md shadow bg-stone-600 animate-pulse">
                 
               </div>
-              <div className="w-full h-[8rem] p-2 rounded-md shadow bg-stone-600 animate-pulse">
-                
-              </div>
-              <div className="w-full h-[8rem] p-2 rounded-md shadow bg-stone-600 animate-pulse">
-                
-              </div>
-              <div className="w-full h-[8rem] p-2 rounded-md shadow bg-stone-600 animate-pulse">
-                
-              </div>
-              <div className="w-full h-[8rem] p-2 rounded-md shadow bg-stone-600 animate-pulse">
-                
-              </div>
+              
             </div>
           )
         }
@@ -90,7 +97,9 @@ const ShowPage = () => {
             <p>Age: {item.age}</p>
             <div className="flex gap-4 mt-2">
               <button className="px-2 py-0.5 bg-sky-600 rounded-md hover:bg-sky-800">Update</button>
-              <button className="px-2 py-0.5 bg-red-600 rounded-md hover:bg-red-800">Delete</button>
+              <button className="px-2 py-0.5 bg-red-600 rounded-md hover:bg-red-800"
+              onClick={()=>handleDeleteBtn(item.$id)}
+              >Delete</button>
             </div>
         </div>
       ))}
