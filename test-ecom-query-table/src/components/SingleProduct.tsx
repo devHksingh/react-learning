@@ -7,11 +7,12 @@ import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "../app/store"
 import { addProductToWishList } from "../features/product/wishListSlice"
 import { addCartProduct } from "../features/product/cartSlice"
+import usePrefetchWishlistProduct from "../hooks/usePrefetchWishlistProduct "
 
 
 
 const SingleProduct = () => {
-  
+  const prefetchWishlistProduct = usePrefetchWishlistProduct()
   const cartState= useSelector((state:RootState)=>state.cart)
   const dispatch = useDispatch()
   const wishlistState = useSelector((state:RootState)=> state.cart)
@@ -38,7 +39,7 @@ const SingleProduct = () => {
     
     dispatch(addProductToWishList({productId:i}))
     // Prefetch the product data
-    
+    prefetchWishlistProduct(i)
   }
   
   if(isError){
