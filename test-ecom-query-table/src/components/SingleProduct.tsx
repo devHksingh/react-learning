@@ -3,9 +3,19 @@ import useGetSingleProduct from "../hooks/useGetSingleProduct"
 import {  Heart, LoaderCircle, ShoppingCart, Star } from "lucide-react"
 import useGetProductByCat from "../hooks/useGetProductByCat"
 import { Product } from "../types/ProductType"
+import { useDispatch, useSelector } from "react-redux"
+import { RootState } from "../app/store"
+import { addProductToWishList } from "../features/product/wishListSlice"
+import { addCartProduct } from "../features/product/cartSlice"
+
 
 
 const SingleProduct = () => {
+  
+  const cartState= useSelector((state:RootState)=>state.cart)
+  const dispatch = useDispatch()
+  const wishlistState = useSelector((state:RootState)=> state.cart)
+  
   const {productId} = useParams()
   if (!productId) {
     // Handle the case where productId is undefined, e.g., return early or show an error.
@@ -14,6 +24,23 @@ const SingleProduct = () => {
   const id = parseInt(productId)
   const {data,isError,isLoading} = useGetSingleProduct(id)
   const {data:categoryData,isLoading:iscategoryLoading}= useGetProductByCat(data?.category)
+  console.log("data?.id",data?.id);
+  
+  console.log("cartState",cartState);
+  console.log("wishlistState",wishlistState);
+
+  
+  
+  const handleUpdateCartState = (i:number)=>{
+    dispatch(addCartProduct({productId:i}))
+  }
+  const handleUpdateWishListState = (i:number)=>{
+    
+    dispatch(addProductToWishList({productId:i}))
+    // Prefetch the product data
+    
+  }
+  
   if(isError){
     return (<>Something went wrong while fetching product details</>)
   }
@@ -31,34 +58,9 @@ const SingleProduct = () => {
   }
   return (
     <div className="min-h-screen">
-      <div className="pt-6 antialiased ">
+      {data && (
+        <div className="pt-6 antialiased ">
         <div aria-label="Breadcrumb">
-        {/* <ol role="list" className="flex items-center max-w-2xl px-4 mx-auto space-x-2 sm:px-6 lg:max-w-7xl lg:px-8">
-            {product.breadcrumbs.map((breadcrumb) => (
-              <li key={breadcrumb.id}>
-                <div className="flex items-center">
-                  <a href={breadcrumb.href} className="mr-2 text-sm font-medium text-gray-900">
-                    {breadcrumb.name}
-                  </a>
-                  <svg
-                    fill="currentColor"
-                    width={16}
-                    height={20}
-                    viewBox="0 0 16 20"
-                    aria-hidden="true"
-                    className="w-4 h-5 text-gray-300"
-                  >
-                    <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                  </svg>
-                </div>
-              </li>
-            ))}
-            <li className="text-sm">
-              <a href={product.href} aria-current="page" className="font-medium text-gray-500 hover:text-gray-600">
-                {product.name}
-              </a>
-            </li>
-          </ol> */}
           <ol role="list" className="flex items-center max-w-2xl gap-2 px-4 mx-auto sm:px-6 lg:max-w-7xl lg:px-8">
             
             <li><Link to={'/'} className="font-medium text-stone-800">Home</Link></li>
@@ -96,8 +98,16 @@ const SingleProduct = () => {
                   </span></h2>
                   <div className="flex items-center gap-4 pt-4 mb-6">
                   
-                    <button className="flex px-2 py-1.5 bg-stone-500 rounded-md hover:bg-stone-600 text-white gap-2"><Heart />Add To Favorites</button>
-                    <button className="flex px-2 py-1.5 bg-blue-500 rounded-md hover:bg-blue-700 text-white gap-2"><ShoppingCart />Add To Cart</button>
+                    <button 
+                    onClick={()=>handleUpdateWishListState(data.id)}
+                    className="flex px-2 py-1.5 bg-stone-500 rounded-md hover:bg-stone-600 text-white gap-2">
+                      <Heart />Add To Favorites
+                      </button>
+                    <button 
+                    onClick={()=>handleUpdateCartState(data.id)}
+                    className="flex px-2 py-1.5 bg-blue-500 rounded-md hover:bg-blue-700 text-white gap-2">
+                      <ShoppingCart />Add To Cart
+                    </button>
                   </div>
               </div>
               <div className="p-1 mt-1">
@@ -108,6 +118,7 @@ const SingleProduct = () => {
           </div>
         </div>
       </div>
+      )}
       <div className="max-w-2xl px-4 mx-auto mt-6 space-x-2 sm:px-6 lg:max-w-7xl lg:px-8">
           <h2 className="text-2xl font-medium tracking-tight text-gray-900">Customers also purchased</h2>
           {/* List  of similar product */}
