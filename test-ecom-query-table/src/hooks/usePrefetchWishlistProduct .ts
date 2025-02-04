@@ -6,7 +6,7 @@ const usePrefetchWishlistProduct  = () => {
   // Prefetch the product data
   const prefetchProduct = async (productId: number) => {
     await queryClient.prefetchQuery({
-      queryKey: ['wishlistProducts', productId],
+      queryKey: ['wishlistProducts', productId,"cartProducts"],
       queryFn: () => getSingleProduct(productId),
       staleTime: 28 * 60 * 1000 // 28 minutes
     })
