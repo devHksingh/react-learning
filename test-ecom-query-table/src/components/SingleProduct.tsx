@@ -12,7 +12,7 @@ import usePrefetchWishlistProduct from "../hooks/usePrefetchWishlistProduct "
 
 
 const SingleProduct = () => {
-  const prefetchWishlistProduct = usePrefetchWishlistProduct()
+  const prefetchProduct = usePrefetchWishlistProduct()
   const cartState= useSelector((state:RootState)=>state.cart)
   const dispatch = useDispatch()
   const wishlistState = useSelector((state:RootState)=> state.cart)
@@ -34,12 +34,13 @@ const SingleProduct = () => {
   
   const handleUpdateCartState = (i:number)=>{
     dispatch(addCartProduct({productId:i}))
+    prefetchProduct(i)
   }
   const handleUpdateWishListState = (i:number)=>{
     
     dispatch(addProductToWishList({productId:i}))
     // Prefetch the product data
-    prefetchWishlistProduct(i)
+    prefetchProduct(i)
   }
   
   if(isError){
