@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import HomeLayout from "./Layout/HomeLayout";
 import App from "./App";
 import SingleProduct from "./components/SingleProduct";
-import Order from "./components/Order";
+// import Order from "./components/Order";
 import WishList from "./components/WishList";
 import Cart from "./components/Cart";
 
@@ -12,17 +12,17 @@ const router = createBrowserRouter([
         element:<HomeLayout/>,
         children:[
             {
-                path:"",
+                path:"/",
                 element:<App/>
             },
             {
-                path:"/:productId",
+                path:"/products/:productId",
                 element:<SingleProduct/>
             },
-            {
-                path:"/order",
-                element:<Order/>
-            },
+            // {
+            //     path:"/order",
+            //     element:<Order/>
+            // },
             {
                 path:"/wishList",
                 element:<WishList/>

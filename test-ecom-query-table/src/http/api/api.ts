@@ -6,17 +6,23 @@ const productFetch = axios.create({
 
 const getAllProducts = async () => {
     const res = await productFetch.get('')
-    return res.data
+    // console.log(res.data.products)
+    return res.data.products
 }
 const getSingleProduct = async (productId: number) => {
     const res = await productFetch.get(`/${productId}`)
+    
+    // console.log(res.data)
     return res.data
 }
 const productByCategory = async (category: string) => {
-    const res = await productFetch.get('/search', {
+    console.log(category);
+    
+    const res = await productFetch.get(`/category/${category}`, {
         params: { q: category }
     })
-    return res.data
+    console.log("productByCategory",res.data.products)
+    return res.data.products
 }
 
 export {
@@ -34,5 +40,12 @@ get product by category
 Deleting a cart
 store data in redux => get all products
 secarch product by id
-
+const fetchQ = async ()=>{
+    const data = await productByCategory("phone")
+    console.log(data)
+    
+  }
+  useEffect(()=>{
+    fetchQ()
+  },[])
 */
