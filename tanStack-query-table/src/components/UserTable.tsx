@@ -25,6 +25,7 @@ const UserTable = () => {
 
     const {data,error,isLoading} = useQuery({
         queryKey:['users'],
+        // https://dummyjson.com/users
         queryFn:getUserData,
         // placeholderData:{ users: [] } ,
         refetchInterval: 20*60*1000, // Refetch every 20min
@@ -166,42 +167,42 @@ const UserTable = () => {
     })
 
     if(isLoading){
-        return (<h1 className="text-2xl text-orange-600 font-bold">Loading....</h1>)
+        return (<h1 className="text-2xl font-bold text-orange-600">Loading....</h1>)
     }
     if(error){
-        return (<h1 className="text-2xl text-orange-600 font-bold">Error....</h1>)
+        return (<h1 className="text-2xl font-bold text-orange-600">Error....</h1>)
     }
     console.log(table.getPageCount());
     
   return (
-    <div className="flex flex-col min-h-screen max-w-8xl mx-auto py-12 px-4 sm:px-6 lg:px-8 ">
+    <div className="flex flex-col min-h-screen px-4 py-12 mx-auto max-w-8xl sm:px-6 lg:px-8 ">
       {/* Search */}
       {/* <input
         type="text"
         placeholder="Search..."
         value={globalFilter}
         onChange={(e) => setGlobalFilter(e.target.value)}
-        className="mb-4 p-2 border rounded"
+        className="p-2 mb-4 border rounded"
       /> */}
-      <div className="mb-4 relative">
+      <div className="relative mb-4">
         <input
           value={globalFilter ?? ""}
           onChange={(e) => setGlobalFilter(e.target.value)}
           placeholder="Search..."
-          className="w-full pl-10 pr-4 py-2 border border-red-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          className="w-full py-2 pl-10 pr-4 border border-red-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
         />
         <Search
-          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+          className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
           size={20}
         />
       </div>
-        <table className="min-w-full divide-y divide-gray-200 border ">
+        <table className="min-w-full border divide-y divide-gray-200 ">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th key={header.id} 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
                 onClick={header.column.getToggleSortingHandler()}
                 >
                   <div className={`${header.column.getCanSort()?`flex items-center cursor-pointer select-none`:''}`}>
@@ -214,11 +215,11 @@ const UserTable = () => {
             </tr>
           ))}
         </thead>
-        <tbody className=" divide-y divide-gray-200">
+        <tbody className="divide-y divide-gray-200 ">
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td key={cell.id} className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
@@ -226,11 +227,11 @@ const UserTable = () => {
           ))}
         </tbody>
       </table>
-      <div className="flex flex-col sm:flex-row justify-between items-center mt-4 text-sm text-gray-700">
+      <div className="flex flex-col items-center justify-between mt-4 text-sm text-gray-700 sm:flex-row">
         <div className="flex items-center mb-4 sm:mb-0">
           <span className="mr-2">Items per page</span>
           <select
-            className="border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2"
+            className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             value={table.getState().pagination.pageSize}
             onChange={(e) => {
               table.setPageSize(Number(e.target.value));
@@ -246,7 +247,7 @@ const UserTable = () => {
 
         <div className="flex items-center space-x-2">
           <button
-            className="p-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-50"
+            className="p-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 disabled:opacity-50"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
           >
@@ -254,7 +255,7 @@ const UserTable = () => {
           </button>
 
           <button
-            className="p-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-50"
+            className="p-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 disabled:opacity-50"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
@@ -271,13 +272,13 @@ const UserTable = () => {
                 const page = e.target.value ? Number(e.target.value) - 1 : 0;
                 table.setPageIndex(page);
               }}
-              className="w-16 p-2 rounded-md border border-gray-300 text-center"
+              className="w-16 p-2 text-center border border-gray-300 rounded-md"
             />
             <span className="ml-1">of {table.getPageCount()}</span>
           </span>
 
           <button
-            className="p-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-50"
+            className="p-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 disabled:opacity-50"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
@@ -285,7 +286,7 @@ const UserTable = () => {
           </button>
 
           <button
-            className="p-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-50"
+            className="p-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 disabled:opacity-50"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
           >
